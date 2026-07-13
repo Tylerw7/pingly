@@ -17,7 +17,7 @@ import (
 func main() {
 	var url *config.Config = config.Load()
 
-	db, err := database.Connect(url.DB_URL)
+	db, err := database.Connect(url.DatabaseURL)
 	if err != nil {
 		log.Fatal(err)
 	}

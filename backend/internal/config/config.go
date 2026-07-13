@@ -1,21 +1,28 @@
 package config
 
 import (
+	"log"
 	"os"
 
 	"github.com/joho/godotenv"
 )
 
 type Config struct {
-	Port   string
-	DB_URL string
+	Port        string
+	DatabaseURL string
 }
 
 func Load() *Config {
-	godotenv.Load()
+	_ = godotenv.Load()
 
-	return &Config{
-		Port:   os.Getenv("PORT"),
-		DB_URL: os.Getenv("DB_URL"),
+	cfg := &Config{
+		Port:        os.Getenv("PORT"),
+		DatabaseURL: os.Getenv("DB_URL"),
 	}
+
+	if cfg.DatabaseURL == "" {
+		log.Fatal("DATABASE_URL is required")
+	}
+
+	return cfg
 }
