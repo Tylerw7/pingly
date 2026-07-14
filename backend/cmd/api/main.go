@@ -3,12 +3,9 @@ package main
 import (
 	"net/http"
 
-	"log"
-
 	"github.com/gin-contrib/cors"
 
 	config "backend/internal/config"
-	database "backend/internal/database"
 	"backend/internal/health"
 
 	"github.com/gin-gonic/gin"
@@ -16,12 +13,6 @@ import (
 
 func main() {
 	var url *config.Config = config.Load()
-
-	db, err := database.Connect(url.DatabaseURL)
-	if err != nil {
-		log.Fatal(err)
-	}
-	_ = db
 
 	r := gin.Default()
 
