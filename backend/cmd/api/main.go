@@ -5,14 +5,14 @@ import (
 
 	"github.com/gin-contrib/cors"
 
-	config "backend/internal/config"
+	//config "backend/internal/config"
 	"backend/internal/health"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	var url *config.Config = config.Load()
+	//var url *config.Config = config.Load()
 
 	r := gin.Default()
 
