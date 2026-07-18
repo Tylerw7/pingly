@@ -1,7 +1,10 @@
 package health
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
+)
 
-func RegisterRoutes(r *gin.Engine) {
-	r.GET("/health", HealthCheck)
+func RegisterRoutes(r *gin.Engine, db *gorm.DB) {
+	r.GET("/health", HealthCheck(db))
 }
