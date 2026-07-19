@@ -7,6 +7,10 @@ type Hub struct {
 	topics map[string]map[chan []byte]struct{}
 }
 
+func (h *Hub) Publish(topicName string, payload []byte) {
+	panic("unimplemented")
+}
+
 func New() *Hub {
 	return &Hub{
 		topics: make(map[string]map[chan []byte]struct{}),
