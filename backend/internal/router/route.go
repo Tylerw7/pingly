@@ -6,6 +6,7 @@ import (
 
 	health "backend/internal/health"
 	messages "backend/internal/messages"
+	subscribe "backend/internal/subscribe"
 )
 
 func SetUpRouter(r *gin.Engine, db *gorm.DB) {
@@ -14,5 +15,7 @@ func SetUpRouter(r *gin.Engine, db *gorm.DB) {
 	health.RegisterRoutes(r, db)
 
 	messages.RegisterRoutes(r, db)
+
+	subscribe.RegisterRoutes(r, db)
 
 }
