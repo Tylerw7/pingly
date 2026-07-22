@@ -60,7 +60,7 @@ func Subscribe(h *hub.Hub) gin.HandlerFunc {
 
 // sseEvent renders a raw pre-marshaled JSON payload as an SSE event.
 // Gin's built-in c.SSEvent would JSON-encode the payload a second time
-// (turning it into an escaped string), so we write the frame ourselves.
+// (turning it into an escaped string), so we write the frame ourselves
 type sseEvent struct {
 	event string
 	data  []byte
