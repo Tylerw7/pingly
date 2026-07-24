@@ -39,7 +39,7 @@ app.MapGet("/weatherforecast", () =>
 
 app.MapGet("/", () =>
 {
-    return new { message = "success" };
+    return new { message = "success the server is running" };
 });
 
 app.Run();
