@@ -13,6 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddControllers();
 builder.Services.AddSingleton(config);
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(config.DatabaseConnectionString));
@@ -34,7 +35,7 @@ app.MapGet("/", () =>
     return new { message = "success the server is running! And the database is created" };
 });
 
-app.MapTopicEndpoints();
+
 
 app.Run();
 
