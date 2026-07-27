@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("pingly_api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1ec22ad122d19233e0fd85da440eda21957a1222")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4e7186ff6b9ff9126ef2bf96d9a27f1c15bc2202")]
 [assembly: System.Reflection.AssemblyProductAttribute("pingly_api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("pingly_api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
