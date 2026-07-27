@@ -9,19 +9,28 @@ namespace pingly_api.Models
 {
     public class Message
     {
-        public int Id { get; set; }
-        public int TopicId { get; set; }
+        public Guid Id { get; set; }
 
-        // Carrier field: NOT stored in DB, DOES appear in JSON as "topic".
-        // Set by the handler when returning messages so clients see the
-        // topic name alongside the message.
-        [NotMapped]
-        public string? TopicName { get; set; }
 
-        [MaxLength(200)]
+        public Guid TopicId { get; set; }
+
+
         public string? Title { get; set; }
-        public required string Body { get; set; }
-        public int Priority { get; set; } = 3;
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+
+        public string Body { get; set; } = null!;
+
+
+        // 0 = normal
+        // 1 = important
+        // 2 = urgent
+        public int Priority { get; set; } = 0;
+
+
+        public DateTime CreatedAt { get; set; }
+
+
+
+        public Topic Topic { get; set; } = null!;
     }
 }

@@ -1,39 +1,138 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using pingly_api.Models; 
+using pingly_api.Models;
 
-
-namespace pingly_api.Data;
-
-public class AppDbContext : DbContext
+namespace pingly_api.Data
 {
-    // Constructor
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+    public class AppDbContext : DbContext
     {
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        {
+        }
 
+        public DbSet<Topic> Topics { get; set; }
+
+        public DbSet<Message> Messages { get; set; }
+
+        public DbSet<Subscriber> Subscribers { get; set; }
+
+        public DbSet<Device> Devices { get; set; }
+        
+
+        protected override void OnModelCreating(
+        ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+
+        ConfigureTopics(modelBuilder);
+
+        ConfigureMessages(modelBuilder);
+
+        ConfigureSubscribers(modelBuilder);
+
+        ConfigureDevices(modelBuilder);
     }
 
-    public DbSet<Topic> Topics => Set<Topic>();
-    public DbSet<Message> Messages => Set<Message>();
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+
+    private static void ConfigureTopics(
+        ModelBuilder modelBuilder)
     {
-        // Topic.Name must be globally unique — this is what makes topic
-        // names function as identifiers. Postgres creates a unique index
-        // that will reject duplicate INSERTs.
         modelBuilder.Entity<Topic>()
-            .HasIndex(t => t.Name)
+            .HasKey(x => x.Id);
+
+
+        modelBuilder.Entity<Topic>()
+            .Property(x => x.Id)
+            .ValueGeneratedOnAdd();
+
+
+        // Topic names must be unique
+        modelBuilder.Entity<Topic>()
+            .HasIndex(x => x.Name)
             .IsUnique();
 
-        // When a topic is deleted, delete all its messages too.
-        // Postgres will enforce this via ON DELETE CASCADE at the FK level,
-        // so the database does the work — no orphaned messages possible.
+
         modelBuilder.Entity<Topic>()
-            .HasMany(t => t.Messages)
-            .WithOne()
-            .HasForeignKey(m => m.TopicId)
+            .Property(x => x.Name)
+            .HasMaxLength(200);
+
+
+        modelBuilder.Entity<Topic>()
+            .HasMany(x => x.Messages)
+            .WithOne(x => x.Topic)
+            .HasForeignKey(x => x.TopicId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+
+        modelBuilder.Entity<Topic>()
+            .HasMany(x => x.Subscribers)
+            .WithOne(x => x.Topic)
+            .HasForeignKey(x => x.TopicId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 
 
 
+    private static void ConfigureMessages(
+        ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Message>()
+            .HasKey(x => x.Id);
+
+
+        modelBuilder.Entity<Message>()
+            .Property(x => x.Body)
+            .HasMaxLength(4000);
+
+
+        // Faster topic history queries
+        modelBuilder.Entity<Message>()
+            .HasIndex(x => new
+            {
+                x.TopicId,
+                x.CreatedAt
+            });
+    }
+
+
+
+    private static void ConfigureSubscribers(
+        ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Subscriber>()
+            .HasKey(x => x.Id);
+
+
+        modelBuilder.Entity<Subscriber>()
+            .HasOne(x => x.Device)
+            .WithMany(x => x.Subscribers)
+            .HasForeignKey(x => x.DeviceId)
+            .OnDelete(DeleteBehavior.SetNull);
+    }
+
+
+
+    private static void ConfigureDevices(
+        ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Device>()
+            .HasKey(x => x.Id);
+
+
+        modelBuilder.Entity<Device>()
+            .Property(x => x.ApnsToken)
+            .HasMaxLength(500);
+
+
+        // One APNS token should not duplicate
+        modelBuilder.Entity<Device>()
+            .HasIndex(x => x.ApnsToken)
+            .IsUnique();
+    }
+    }
 }

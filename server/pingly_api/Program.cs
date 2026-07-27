@@ -1,8 +1,9 @@
 using System.Data.Common;
 using Microsoft.EntityFrameworkCore;
 using pingly_api.Config;
+
+using System.Threading.Channels;
 using pingly_api.Data;
-using pingly_api.Endpoints;
 
 
 var config = AppConfig.Load();
@@ -15,10 +16,32 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 builder.Services.AddSingleton(config);
+builder.Services.AddSingleton(Channel.CreateUnbounded<string>());
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(config.DatabaseConnectionString));
 
+
 var app = builder.Build();
+
+
+
+// test for channels
+var channel = app.Services.GetRequiredService<Channel<string>>();
+_ = Task.Run(async () =>
+{
+    await foreach (var message in channel.Reader.ReadAllAsync())
+    {
+        Console.WriteLine($"Recieved: {message}");
+
+        await Task.Delay(2000);
+
+        Console.WriteLine($"Finished: {message}");
+    }
+});
+
+
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -9,18 +9,34 @@ namespace pingly_api.Models
 {
     public class Topic
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
-        [MaxLength(64)]
-        public required string Name { get; set; }
 
-        [JsonIgnore]
-        public string? OwnerId { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        // The public topic address
+        // Example:
+        // server-alerts-x92kd8
+        public string Name { get; set; } = null!;
 
-        // Navigation property — EF Core uses this to model the one-to-many
-        // relationship. Not serialized to JSON (would cause infinite loops).
-        [JsonIgnore]
-        public ICollection<Message> Messages { get; set; } = new List<Message>();
+
+        public string? Description { get; set; }
+
+
+        // Allows users to subscribe
+        // without special permission
+        public bool IsPublic { get; set; } = true;
+
+
+        public DateTime CreatedAt { get; set; }
+
+
+
+        // Navigation properties
+
+        public ICollection<Message> Messages { get; set; }
+            = new List<Message>();
+
+
+        public ICollection<Subscriber> Subscribers { get; set; }
+            = new List<Subscriber>();
     }
 }
