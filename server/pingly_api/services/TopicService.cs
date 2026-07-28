@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using pingly_api.Data;
 using pingly_api.DTOs;
 using pingly_api.Models;
@@ -32,8 +33,34 @@ namespace pingly_api.services
 
                 _context.Topics.Add(topic);
                 await _context.SaveChangesAsync();
-                
+
                 return MapResponse(topic);
+        }
+
+
+        public async Task<Topic?> GetAsync(string name)
+        {
+            return await _context.Topics
+                .FirstOrDefaultAsync(x => x.Name == name);
+        }
+
+        public async Task<List<TopicResponseDto>> GetAllAsync()
+        {
+            return await _context.Topics
+                .Select(x => MapResponse(x))
+                .ToListAsync();
+        }
+
+        public async Task<bool> DeleteAsync(string name)
+        {
+            var topic = await GetAsync(name);
+
+            if (topic == null) return false;
+
+            _context.Topics.Remove(topic);
+            await _context.SaveChangesAsync();
+
+            return true;
         }
 
 

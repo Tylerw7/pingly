@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Channels;
+using pingly_api.DTOs;
+using pingly_api.services;
 
 
 
@@ -12,38 +12,69 @@ namespace pingly_api.Controllers
 {
     [ApiController]
     [Route("topics")]
-    public class TopicController : ControllerBase
+    public class TopicsController : ControllerBase
     {
-        private static readonly Regex TopicNameRegex = new(
-        @"^[a-zA-Z0-9_-]{1,64}$", RegexOptions.Compiled);
-
-        private const int MaxBodyBytes = 8 * 1024;
-
-        //private readonly AppDbContext _db;
-        private readonly Channel<string> _channel;
+        private readonly TopicService _service;
 
 
-        public TopicController(Channel<string> channel)
+        public TopicsController(
+            TopicService service)
         {
-            //_db = db;
-            _channel = channel;
+            _service = service;
         }
 
-        [HttpGet("health")]
-        public IActionResult HealthCheck()
+
+
+        [HttpPost]
+        public async Task<ActionResult<TopicResponseDto>> Create(
+            CreateTopicRequestDto request)
         {
-            return Ok(new { status = "New status ok." });
+            var topic =
+                await _service.CreateAsync(request);
+
+
+            return Ok(topic);
         }
 
-        [HttpPost("messages")]
-        public async Task<IActionResult> message(string message)
+
+
+        [HttpGet("{name}")]
+        public async Task<ActionResult> Get(string name)
         {
-            await _channel.Writer.WriteAsync(message);
-            return Accepted(new
-            {
-                qued = message
-            });
+            var topic =
+                await _service.GetAsync(name);
+
+
+            if (topic == null)
+                return NotFound();
+
+
+            return Ok(topic);
         }
 
-    }
+
+
+        [HttpGet]
+        public async Task<ActionResult> GetAll()
+        {
+            return Ok(
+                await _service.GetAllAsync());
+        }
+
+
+
+        [HttpDelete("{name}")]
+        public async Task<ActionResult> Delete(string name)
+        {
+            var deleted =
+                await _service.DeleteAsync(name);
+
+
+            if (!deleted)
+                return NotFound();
+
+
+            return NoContent();
+        }
+}
 }

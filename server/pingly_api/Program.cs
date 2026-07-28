@@ -1,7 +1,7 @@
 using System.Data.Common;
 using Microsoft.EntityFrameworkCore;
 using pingly_api.Config;
-
+using pingly_api.services;
 using System.Threading.Channels;
 using pingly_api.Data;
 
@@ -17,6 +17,10 @@ builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 builder.Services.AddSingleton(config);
 builder.Services.AddSingleton(Channel.CreateUnbounded<string>());
+
+// Services
+builder.Services.AddScoped<TopicService>();
+
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(config.DatabaseConnectionString));
 
