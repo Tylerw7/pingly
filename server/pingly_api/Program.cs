@@ -4,6 +4,7 @@ using pingly_api.Config;
 using pingly_api.services;
 using System.Threading.Channels;
 using pingly_api.Data;
+using pingly_api.Channels;
 
 
 var config = AppConfig.Load();
@@ -17,6 +18,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 builder.Services.AddSingleton(config);
 builder.Services.AddSingleton(Channel.CreateUnbounded<string>());
+builder.Services.AddSingleton<NotificationChannels>();
 
 // Services
 builder.Services.AddScoped<TopicService>();
