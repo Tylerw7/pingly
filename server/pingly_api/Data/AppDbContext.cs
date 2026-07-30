@@ -17,7 +17,7 @@ namespace pingly_api.Data
 
         public DbSet<Message> Messages { get; set; }
 
-        public DbSet<Subscriber> Subscribers { get; set; }
+        public DbSet<DeviceSubscription> DeviceSubscriptions { get; set; }
 
         public DbSet<Device> Devices { get; set; }
         
@@ -32,7 +32,7 @@ namespace pingly_api.Data
 
         ConfigureMessages(modelBuilder);
 
-        ConfigureSubscribers(modelBuilder);
+        ConfigureDeviceSubscriptions(modelBuilder);
 
         ConfigureDevices(modelBuilder);
     }
@@ -70,7 +70,7 @@ namespace pingly_api.Data
 
 
         modelBuilder.Entity<Topic>()
-            .HasMany(x => x.Subscribers)
+            .HasMany(x => x.DeviceSubscriptions)
             .WithOne(x => x.Topic)
             .HasForeignKey(x => x.TopicId)
             .OnDelete(DeleteBehavior.Cascade);
@@ -101,20 +101,33 @@ namespace pingly_api.Data
 
 
 
-    private static void ConfigureSubscribers(
+    private static void ConfigureDeviceSubscriptions(
         ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Subscriber>()
+        modelBuilder.Entity<DeviceSubscription>()
             .HasKey(x => x.Id);
 
+        modelBuilder.Entity<DeviceSubscription>()
+            .HasOne(x => x.Topic)
+            .WithMany(x => x.DeviceSubscriptions)
+            .HasForeignKey(x => x.TopicId)
+            .OnDelete(DeleteBehavior.Cascade);
 
-        modelBuilder.Entity<Subscriber>()
+        modelBuilder.Entity<DeviceSubscription>()
             .HasOne(x => x.Device)
-            .WithMany(x => x.Subscribers)
+            .WithMany(x => x.DeviceSubscriptions)
             .HasForeignKey(x => x.DeviceId)
-            .OnDelete(DeleteBehavior.SetNull);
-    }
+            .OnDelete(DeleteBehavior.Cascade);
 
+        // Prevent duplicate subscriptions
+        modelBuilder.Entity<DeviceSubscription>()
+            .HasIndex(x => new
+            {
+                x.TopicId,
+                x.DeviceId
+            })
+            .IsUnique();
+}
 
 
     private static void ConfigureDevices(

@@ -85,43 +85,5 @@ namespace pingly_api.Controllers
         }
 
 
-
-        public async Task<bool> PublishAsync(
-        string topicName,
-        PublishMessageRequestDto request,
-        NotificationChannels notificationChannel)
-    {
-        var topic = await _context.Topics
-            .FirstOrDefaultAsync(x => x.Name == topicName);
-
-        if (topic == null)
-            return false;
-
-        var message = new Message
-        {
-            Id = Guid.NewGuid(),
-            TopicId = topic.Id,
-            Title = request.Title,
-            Body = request.Body,
-            CreatedAt = DateTime.UtcNow
-        };
-
-        _context.Messages.Add(message);
-
-        await _context.SaveChangesAsync();
-
-        await notificationChannel.Channel.Writer.WriteAsync(
-            new PublishMessage
-            {
-                MessageId = message.Id,
-                TopicId = topic.Id,
-                TopicName = topic.Name,
-                Title = message.Title,
-                Body = message.Body,
-                CreatedAt = message.CreatedAt
-            });
-
-        return true;
-    }
 }
 }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace pingly_api.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialDB : Migration
+    public partial class newMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -41,6 +41,32 @@ namespace pingly_api.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "DeviceSubscriptions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    TopicId = table.Column<Guid>(type: "uuid", nullable: false),
+                    DeviceId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DeviceSubscriptions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DeviceSubscriptions_Devices_DeviceId",
+                        column: x => x.DeviceId,
+                        principalTable: "Devices",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DeviceSubscriptions_Topics_TopicId",
+                        column: x => x.TopicId,
+                        principalTable: "Topics",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Messages",
                 columns: table => new
                 {
@@ -62,33 +88,6 @@ namespace pingly_api.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "Subscribers",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    TopicId = table.Column<Guid>(type: "uuid", nullable: false),
-                    BrowserId = table.Column<string>(type: "text", nullable: true),
-                    DeviceId = table.Column<Guid>(type: "uuid", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Subscribers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Subscribers_Devices_DeviceId",
-                        column: x => x.DeviceId,
-                        principalTable: "Devices",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
-                    table.ForeignKey(
-                        name: "FK_Subscribers_Topics_TopicId",
-                        column: x => x.TopicId,
-                        principalTable: "Topics",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_Devices_ApnsToken",
                 table: "Devices",
@@ -96,19 +95,20 @@ namespace pingly_api.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Messages_TopicId_CreatedAt",
-                table: "Messages",
-                columns: new[] { "TopicId", "CreatedAt" });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Subscribers_DeviceId",
-                table: "Subscribers",
+                name: "IX_DeviceSubscriptions_DeviceId",
+                table: "DeviceSubscriptions",
                 column: "DeviceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Subscribers_TopicId",
-                table: "Subscribers",
-                column: "TopicId");
+                name: "IX_DeviceSubscriptions_TopicId_DeviceId",
+                table: "DeviceSubscriptions",
+                columns: new[] { "TopicId", "DeviceId" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Messages_TopicId_CreatedAt",
+                table: "Messages",
+                columns: new[] { "TopicId", "CreatedAt" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Topics_Name",
@@ -121,10 +121,10 @@ namespace pingly_api.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Messages");
+                name: "DeviceSubscriptions");
 
             migrationBuilder.DropTable(
-                name: "Subscribers");
+                name: "Messages");
 
             migrationBuilder.DropTable(
                 name: "Devices");

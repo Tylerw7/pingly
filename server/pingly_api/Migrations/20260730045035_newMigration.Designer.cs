@@ -12,8 +12,8 @@ using pingly_api.Data;
 namespace pingly_api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260727040401_InitialDB")]
-    partial class InitialDB
+    [Migration("20260730045035_newMigration")]
+    partial class newMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,6 +51,31 @@ namespace pingly_api.Migrations
                     b.ToTable("Devices");
                 });
 
+            modelBuilder.Entity("pingly_api.Models.DeviceSubscription", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("DeviceId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("TopicId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeviceId");
+
+                    b.HasIndex("TopicId", "DeviceId")
+                        .IsUnique();
+
+                    b.ToTable("DeviceSubscriptions");
+                });
+
             modelBuilder.Entity("pingly_api.Models.Message", b =>
                 {
                     b.Property<Guid>("Id")
@@ -81,33 +106,6 @@ namespace pingly_api.Migrations
                     b.ToTable("Messages");
                 });
 
-            modelBuilder.Entity("pingly_api.Models.Subscriber", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("BrowserId")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid?>("DeviceId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("TopicId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DeviceId");
-
-                    b.HasIndex("TopicId");
-
-                    b.ToTable("Subscribers");
-                });
-
             modelBuilder.Entity("pingly_api.Models.Topic", b =>
                 {
                     b.Property<Guid>("Id")
@@ -136,6 +134,25 @@ namespace pingly_api.Migrations
                     b.ToTable("Topics");
                 });
 
+            modelBuilder.Entity("pingly_api.Models.DeviceSubscription", b =>
+                {
+                    b.HasOne("pingly_api.Models.Device", "Device")
+                        .WithMany("DeviceSubscriptions")
+                        .HasForeignKey("DeviceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("pingly_api.Models.Topic", "Topic")
+                        .WithMany("DeviceSubscriptions")
+                        .HasForeignKey("TopicId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Device");
+
+                    b.Navigation("Topic");
+                });
+
             modelBuilder.Entity("pingly_api.Models.Message", b =>
                 {
                     b.HasOne("pingly_api.Models.Topic", "Topic")
@@ -147,34 +164,16 @@ namespace pingly_api.Migrations
                     b.Navigation("Topic");
                 });
 
-            modelBuilder.Entity("pingly_api.Models.Subscriber", b =>
-                {
-                    b.HasOne("pingly_api.Models.Device", "Device")
-                        .WithMany("Subscribers")
-                        .HasForeignKey("DeviceId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("pingly_api.Models.Topic", "Topic")
-                        .WithMany("Subscribers")
-                        .HasForeignKey("TopicId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Device");
-
-                    b.Navigation("Topic");
-                });
-
             modelBuilder.Entity("pingly_api.Models.Device", b =>
                 {
-                    b.Navigation("Subscribers");
+                    b.Navigation("DeviceSubscriptions");
                 });
 
             modelBuilder.Entity("pingly_api.Models.Topic", b =>
                 {
-                    b.Navigation("Messages");
+                    b.Navigation("DeviceSubscriptions");
 
-                    b.Navigation("Subscribers");
+                    b.Navigation("Messages");
                 });
 #pragma warning restore 612, 618
         }

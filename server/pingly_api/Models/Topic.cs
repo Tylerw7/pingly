@@ -36,7 +36,7 @@ namespace pingly_api.Models
             = new List<Message>();
 
 
-        public ICollection<Subscriber> Subscribers { get; set; }
-            = new List<Subscriber>();
+        public ICollection<DeviceSubscription> DeviceSubscriptions { get; set; }
+            = new List<DeviceSubscription>();
     }
 }

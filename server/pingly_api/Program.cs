@@ -19,6 +19,7 @@ builder.Services.AddControllers();
 builder.Services.AddSingleton(config);
 builder.Services.AddSingleton(Channel.CreateUnbounded<string>());
 builder.Services.AddSingleton<NotificationChannels>();
+builder.Services.AddHostedService<NotificationWorker>();
 
 // Services
 builder.Services.AddScoped<TopicService>();
