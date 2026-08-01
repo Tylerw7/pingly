@@ -16,6 +16,10 @@ namespace pingly_api.Models
 
         public string Platform { get; set; } = "ios";
 
+        public DateTime LastSeenAt { get; set; }
+
+        public bool IsActive { get; set; } = true;
+
 
         public DateTime CreatedAt { get; set; }
 
