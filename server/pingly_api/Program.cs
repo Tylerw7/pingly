@@ -5,6 +5,7 @@ using pingly_api.services;
 using System.Threading.Channels;
 using pingly_api.Data;
 using pingly_api.Channels;
+using pingly_api.SSE;
 
 
 var config = AppConfig.Load();
@@ -20,6 +21,8 @@ builder.Services.AddSingleton(config);
 builder.Services.AddSingleton(Channel.CreateUnbounded<string>());
 builder.Services.AddSingleton<NotificationChannels>();
 builder.Services.AddHostedService<NotificationWorker>();
+builder.Services.AddSingleton<SseConnectionManager>();
+builder.Services.AddHostedService<SseHeartbeatWorkers>();
 
 // Services
 builder.Services.AddScoped<TopicService>();
