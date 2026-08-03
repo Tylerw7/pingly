@@ -23,6 +23,7 @@ builder.Services.AddSingleton<NotificationChannels>();
 builder.Services.AddHostedService<NotificationWorker>();
 builder.Services.AddSingleton<SseConnectionManager>();
 builder.Services.AddHostedService<SseHeartbeatWorkers>();
+builder.Services.AddScoped<DeviceService>();
 
 // Services
 builder.Services.AddScoped<TopicService>();
