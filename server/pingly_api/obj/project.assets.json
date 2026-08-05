@@ -2,6 +2,20 @@
   "version": 3,
   "targets": {
     "net10.0": {
+      "dotAPNS/4.6.0": {
+        "type": "package",
+        "dependencies": {
+          "JetBrains.Annotations": "2022.1.0",
+          "Newtonsoft.Json": "13.0.1",
+          "Portable.BouncyCastle": "1.9.0"
+        },
+        "compile": {
+          "lib/netstandard2.1/dotAPNS.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.1/dotAPNS.dll": {}
+        }
+      },
       "DotNetEnv/3.2.0": {
         "type": "package",
         "dependencies": {
@@ -73,6 +87,19 @@
         "runtime": {
           "lib/net6.0/Humanizer.dll": {
             "related": ".xml"
+          }
+        }
+      },
+      "JetBrains.Annotations/2022.1.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/JetBrains.Annotations.dll": {
+            "related": ".deps.json;.xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/JetBrains.Annotations.dll": {
+            "related": ".deps.json;.xml"
           }
         }
       },
@@ -749,6 +776,19 @@
           }
         }
       },
+      "Portable.BouncyCastle/1.9.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/BouncyCastle.Crypto.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/BouncyCastle.Crypto.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Scalar.AspNetCore/2.16.16": {
         "type": "package",
         "compile": {
@@ -1079,6 +1119,20 @@
     }
   },
   "libraries": {
+    "dotAPNS/4.6.0": {
+      "sha512": "51fnJLyNfqv1E3CekBgejqxfC0xelgfoUXHFJMNNkfJN9xuZszfqrR3f8707BQBCspo8d95NZVs1TH9DJqVmRA==",
+      "type": "package",
+      "path": "dotapns/4.6.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "dotapns.4.6.0.nupkg.sha512",
+        "dotapns.nuspec",
+        "lib/net462/dotAPNS.dll",
+        "lib/netstandard2.0/dotAPNS.dll",
+        "lib/netstandard2.1/dotAPNS.dll"
+      ]
+    },
     "DotNetEnv/3.2.0": {
       "sha512": "2q+PD+aJcRW9QuRcIv4F8WbvEDxI6cwxzZJec2i45cBY4cAKCAoW4ZPkApJ7H82wr6Yfmxx/0kb1nLnRmZrGZA==",
       "type": "package",
@@ -1170,6 +1224,28 @@
         "lib/netstandard2.0/Humanizer.dll",
         "lib/netstandard2.0/Humanizer.xml",
         "logo.png"
+      ]
+    },
+    "JetBrains.Annotations/2022.1.0": {
+      "sha512": "ASfpoFJxiRsC9Xc4TWuPM41Zb/gl64xwfMOhnOZ3RnVWGYIZchjpWQV5zshJgoc/ZxVtgjaF7b577lURj7E6ig==",
+      "type": "package",
+      "path": "jetbrains.annotations/2022.1.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "icon.png",
+        "jetbrains.annotations.2022.1.0.nupkg.sha512",
+        "jetbrains.annotations.nuspec",
+        "lib/net20/JetBrains.Annotations.dll",
+        "lib/net20/JetBrains.Annotations.xml",
+        "lib/netstandard1.0/JetBrains.Annotations.deps.json",
+        "lib/netstandard1.0/JetBrains.Annotations.dll",
+        "lib/netstandard1.0/JetBrains.Annotations.xml",
+        "lib/netstandard2.0/JetBrains.Annotations.deps.json",
+        "lib/netstandard2.0/JetBrains.Annotations.dll",
+        "lib/netstandard2.0/JetBrains.Annotations.xml",
+        "lib/portable40-net40+sl5+win8+wp8+wpa81/JetBrains.Annotations.dll",
+        "lib/portable40-net40+sl5+win8+wp8+wpa81/JetBrains.Annotations.xml"
       ]
     },
     "Microsoft.AspNetCore.Authentication.JwtBearer/10.0.10": {
@@ -2724,6 +2800,21 @@
         "postgresql.png"
       ]
     },
+    "Portable.BouncyCastle/1.9.0": {
+      "sha512": "eZZBCABzVOek+id9Xy04HhmgykF0wZg9wpByzrWN7q8qEI0Qen9b7tfd7w8VA3dOeesumMG7C5ZPy0jk7PSRHw==",
+      "type": "package",
+      "path": "portable.bouncycastle/1.9.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net40/BouncyCastle.Crypto.dll",
+        "lib/net40/BouncyCastle.Crypto.xml",
+        "lib/netstandard2.0/BouncyCastle.Crypto.dll",
+        "lib/netstandard2.0/BouncyCastle.Crypto.xml",
+        "portable.bouncycastle.1.9.0.nupkg.sha512",
+        "portable.bouncycastle.nuspec"
+      ]
+    },
     "Scalar.AspNetCore/2.16.16": {
       "sha512": "Ax0e0bIh+Upf92k1+pTBUom3e/kbpu20qsrDYmmS1NM721Eq2xF8c789x6IbiNrvW8WwySRzPv/icYYhb6idSg==",
       "type": "package",
@@ -3192,6 +3283,7 @@
   },
   "projectFileDependencyGroups": {
     "net10.0": [
+      "DotAPNS >= 4.6.0",
       "DotNetEnv >= 3.2.0",
       "FluentValidation.AspNetCore >= 11.3.1",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 10.0.10",
@@ -3249,6 +3341,10 @@
       "net10.0": {
         "targetAlias": "net10.0",
         "dependencies": {
+          "DotAPNS": {
+            "target": "Package",
+            "version": "[4.6.0, )"
+          },
           "DotNetEnv": {
             "target": "Package",
             "version": "[3.2.0, )"
